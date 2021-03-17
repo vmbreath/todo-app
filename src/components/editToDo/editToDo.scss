@@ -1,0 +1,38 @@
+.MuiDialog-paperWidthSm {
+  max-width: none !important;
+}
+
+.edit-form {
+  padding: 0 2vw 2vw;
+  height: 30vh;
+  width: 40vw;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 50% 25% 25%;
+  grid-template-rows: 60% 20% 20%;
+  grid-template-areas:
+          'to-do-multiline description-multiline description-multiline'
+          'slider slider slider'
+          '. . save-button';
+
+  .to-do-multiline {
+    grid-area: to-do-multiline;
+    margin-right: 1vw;
+  }
+
+  .description-multiline {
+    grid-area: description-multiline;
+  }
+
+  .slider {
+    grid-area: slider;
+  }
+
+  .save-button {
+    grid-area: save-button;
+  }
+  .MuiDialog-paperWidthSm {
+    max-width: none !important;
+  }
+}
+
