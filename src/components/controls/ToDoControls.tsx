@@ -17,9 +17,17 @@ export default function ToDoControls() {
     const filterState: enumFilterState = useSelector(selectFilterState);
 
     useEffect(() => {
-        filterState === enumFilterState.all && setFilterButtonText('Show done');
-        filterState === enumFilterState.completed && setFilterButtonText('Show undone');
-        filterState === enumFilterState.notCompleted && setFilterButtonText('Show all');
+        switch (filterState) {
+            case enumFilterState.all:
+                setFilterButtonText('Show done');
+                break;
+            case enumFilterState.completed:
+                setFilterButtonText('Show undone');
+                break;
+            case enumFilterState.notCompleted:
+                setFilterButtonText('Show all');
+                break;
+        }
     }, [filterState])
 
     return (
