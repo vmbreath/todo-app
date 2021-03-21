@@ -1,9 +1,9 @@
 //Создается enum filterState для определения состояний фильтра при отрисовке списка TODO
-enum enumFilterState {
+enum EnumFilterState {
     all,
     completed,
     notCompleted
 }
 
-export default enumFilterState;
+export default EnumFilterState;
 

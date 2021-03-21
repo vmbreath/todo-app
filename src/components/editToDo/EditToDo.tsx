@@ -1,26 +1,34 @@
-import React, {useState} from 'react';
+import React, {FC, useMemo, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import IToDoElement from "../../models/IToDoElement";
 import {useHistory} from "react-router-dom";
-import {addToDo, changeToDo, selectTodos} from "../../reducers/toDoReducer";
+import {addToDo, changeToDo, selectTodos, setErrorMessage} from "../../reducers/toDoReducer";
 import {useDispatch, useSelector} from "react-redux";
 import './editToDo.scss';
 import {useParams} from "react-router-dom";
 import {Slider, TextField} from "@material-ui/core";
 import {addToDoQuery, changeToDoQuery} from "../../queries/queries";
+import ToDoElementModel from "../../models/ToDoElementModel";
 
 // Компонент для создания окна изменения параметров TODO
-export default function EditToDo() {
-    let open = true;
+export const EditToDo: FC = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const {id}: { "id": string } = useParams();
-    let elemToDo: IToDoElement | undefined = useSelector(selectTodos).find(value => value.id === id);
-    if (!elemToDo) {
-        elemToDo = {description: "", id: id, isDone: false, percent: 0, todo: ""}
-    }
+    const toDosSelector = useSelector(selectTodos);
+    const elemToDo: ToDoElementModel = useMemo(() => {
+        const result: ToDoElementModel | undefined = toDosSelector.find((value) => value.id === id);
+        return (
+            result || {
+                description: "",
+                id: "",
+                isDone: false,
+                percent: 0,
+                todo: ""
+            }
+        )
+    }, [toDosSelector, id]);
     const [toDoState, setToDo] = useState(elemToDo ? elemToDo.todo : '');
     const [description, setDescription] = useState(elemToDo ? elemToDo.description : '');
     const [progress, setProgress] = useState(elemToDo ? elemToDo.percent : 0);
@@ -28,32 +36,43 @@ export default function EditToDo() {
         history.goBack();
     };
 
+    const copyEditToDo = (): ToDoElementModel => {
+        return {
+            ...elemToDo,
+            description,
+            percent: progress,
+            todo: toDoState
+        }
+    }
+    const editTodoElem = async () => {
+        const result = await changeToDoQuery(copyEditToDo());
+        dispatch(changeToDo(result));
+        history.goBack();
+    }
+
+    const addToDoElem = async () => {
+        const result = await addToDoQuery(copyEditToDo());
+        dispatch(addToDo(result));
+        history.goBack();
+    }
+
     const saveData = () => {
-        let toDo: IToDoElement = {description: "", id: "", isDone: false, percent: 0, todo: ""};
-        Object.assign(toDo, elemToDo);
-        toDo.todo = toDoState;
-        toDo.description = description;
-        toDo.percent = progress;
-        if (toDo.id !== "new") {
-            changeToDoQuery(toDo).then((res) => {
-                if (res.id === toDo.id) {
-                    dispatch(changeToDo(toDo));
-                    history.goBack();
-                }
-            });
-        } else {
-            addToDoQuery(toDo).then((res) => {
-                dispatch(addToDo(res));
-                history.goBack();
-            });
+        try {
+            if (id !== "new") {
+                editTodoElem();
+            } else {
+                addToDoElem();
+            }
+        } catch (error) {
+            dispatch(setErrorMessage("TODO element wasn't saved!"));
         }
     };
 
     return (
-        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-            <DialogTitle style={{backgroundImage: "url(/cool-background.png)"}} id="simple-dialog-title">Set TODO
+        <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={true}>
+            <DialogTitle style={{backgroundImage: "url(/images/cool-background.png)"}} id="simple-dialog-title">Set TODO
                 data</DialogTitle>
-            <div style={{backgroundImage: "url(/cool-background.png)"}} className={'edit-form'}>
+            <div style={{backgroundImage: "url(/images/cool-background.png)"}} className={'edit-form'}>
                 <TextField
                     id="outlined-multiline-static"
                     label="TODO"

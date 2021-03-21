@@ -1,26 +1,29 @@
-import IToDoElement from "../models/IToDoElement";
+import ToDoElementModel from "../models/ToDoElementModel";
 
 const mockApiUrl = 'https://6044a896c0194f00170bc13e.mockapi.io/todos/';
+
 //Получение всего списка TODO c mockapi.io
-export async function allDataQuery() {
-    let response = await fetch(mockApiUrl);
-    let commits = await response.json();
+export const allDataQuery = async (): Promise<ToDoElementModel[]> => {
+    const response = await fetch(mockApiUrl);
+    const commits = await response.json();
     return await commits;
 }
+
 //Удаление конкретной TODO c mockapi.io
-export async function deleteToDoQuery(toDoId: string) {
+export const deleteToDoQuery = async (toDoId: string): Promise<ToDoElementModel> => {
     const url = mockApiUrl + toDoId;
-    let response = await fetch(url,
+    const response = await fetch(url,
         {
             method: "DELETE",
         });
-    let commits = await response.json();
+    const commits = await response.json();
     return await commits;
 }
+
 //Добавление TODO на mockapi.io
-export async function addToDoQuery(data: IToDoElement) {
+export const addToDoQuery = async (data: ToDoElementModel): Promise<ToDoElementModel> => {
     const url = mockApiUrl;
-    let response = await fetch(url,
+    const response = await fetch(url,
         {
             headers: {
                 'Accept': 'application/json',
@@ -29,13 +32,14 @@ export async function addToDoQuery(data: IToDoElement) {
             method: "POST",
             body: JSON.stringify(data)
         });
-    let commits = await response.json();
+    const commits = await response.json();
     return await commits;
 }
+
 //Изменение TODO на mockapi.io
-export async function changeToDoQuery(data: IToDoElement) {
+export const changeToDoQuery = async (data: ToDoElementModel): Promise<ToDoElementModel> => {
     const url = mockApiUrl + data.id;
-    let response = await fetch(url,
+    const response = await fetch(url,
         {
             headers: {
                 'Accept': 'application/json',
@@ -44,6 +48,6 @@ export async function changeToDoQuery(data: IToDoElement) {
             method: "PUT",
             body: JSON.stringify(data)
         });
-    let commits = await response.json();
+    const commits = await response.json();
     return await commits;
 }

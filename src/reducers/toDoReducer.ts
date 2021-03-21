@@ -1,15 +1,17 @@
 import {createSlice} from '@reduxjs/toolkit';
-import enumFilterState from '../models/enumFilterState';
-import IToDoElement from "../models/IToDoElement";
+import EnumFilterState from '../models/EnumFilterState';
+import ToDoElementModel from "../models/ToDoElementModel";
 
 interface initialState {
-    listTodos: Array<IToDoElement>,
-    filterState: enumFilterState
+    listTodos: Array<ToDoElementModel>,
+    filterState: EnumFilterState,
+    errorMessage: string
 }
 
 export const initialState: initialState = ({
     listTodos: [],
-    filterState: enumFilterState.all
+    filterState: EnumFilterState.all,
+    errorMessage: ''
 });
 
 // Содержит данные обо всех ToDo, полученных с mockapi.io и текущее состояние фильтра по ToDo, actions для работы с данными
@@ -35,22 +37,26 @@ export const toDoReducer = createSlice({
         },
         filterToDos: (state) => {
             switch (state.filterState) {
-                case enumFilterState.all:
-                    state.filterState = enumFilterState.completed;
+                case EnumFilterState.all:
+                    state.filterState = EnumFilterState.completed;
                     break;
-                case enumFilterState.completed:
-                    state.filterState = enumFilterState.notCompleted;
+                case EnumFilterState.completed:
+                    state.filterState = EnumFilterState.notCompleted;
                     break;
-                case enumFilterState.notCompleted:
-                    state.filterState = enumFilterState.all;
+                case EnumFilterState.notCompleted:
+                    state.filterState = EnumFilterState.all;
                     break;
             }
+        },
+        setErrorMessage: (state, action) => {
+            state.errorMessage = action.payload;
         },
     },
 });
 
-export const {setToDos, deleteToDo, changeToDo, addToDo, filterToDos} = toDoReducer.actions;
-export const selectTodos = (state: { todo: { listTodos: Array<IToDoElement> }; }) => state.todo.listTodos;
-export const selectFilterState = (state: { todo: { filterState: enumFilterState }; }) => state.todo.filterState;
+export const {setToDos, deleteToDo, changeToDo, addToDo, filterToDos, setErrorMessage} = toDoReducer.actions;
+export const selectTodos = (state: { todo: { listTodos: Array<ToDoElementModel> }; }) => state.todo.listTodos;
+export const selectFilterState = (state: { todo: { filterState: EnumFilterState }; }) => state.todo.filterState;
+export const selectErrorMessage = (state: { todo: { errorMessage: string }; }) => state.todo.errorMessage;
 export default toDoReducer.reducer;
 export const {reducer, actions} = toDoReducer;

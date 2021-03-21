@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {FC} from 'react';
 import CircularProgress, {CircularProgressProps} from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 // Компонент для создания ProgressBar для отрисовки в списке TODO
-export default function ProgressBar(props: CircularProgressProps & { value: number }) {
+export const ProgressBar: FC<CircularProgressProps & { value: number }> = (props) => {
     return (
         <Box position="relative" display="inline-flex">
             <CircularProgress variant="determinate" {...props} />

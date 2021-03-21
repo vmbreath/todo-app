@@ -1,27 +1,35 @@
-import React, {useEffect} from 'react';
-import logo from '../../images/logo.svg';
+import React, {FC, useCallback, useEffect} from 'react';
 import './App.scss';
-import TODOElement from "../listToDos/ToDoList";
+import {ToDoList} from "../listToDos/ToDoList";
 import {Route, Switch} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import EditToDo from "../editToDo/EditToDo";
-import {setToDos} from "../../reducers/toDoReducer";
+import {EditToDo} from "../editToDo/EditToDo";
+import {setErrorMessage, setToDos} from "../../reducers/toDoReducer";
 import {allDataQuery} from "../../queries/queries";
-import ToDoControls from "../controls/ToDoControls";
+import {ToDoControls} from "../controls/ToDoControls";
+import {SnackbarError} from "../Snackbar/Snackbar";
 
 // Компонент для создания приложения TODO
-function App() {
+export const App: FC = () => {
     const dispatch = useDispatch();
+
+    const getAllData = useCallback(async () => {
+        try {
+            const result = await allDataQuery();
+            dispatch(setToDos(result));
+        } catch (error) {
+            dispatch(setErrorMessage("Data wasn't loaded!"));
+        }
+    }, [dispatch])
+
     useEffect(() => {
-        allDataQuery().then((res) => {
-            dispatch(setToDos(res));
-        });
-    }, []);
+        getAllData();
+    }, [getAllData]);
 
     return (
         <div className="App">
             <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo"/>
+                <img src="/images/logo.svg" className="App-logo" alt="logo"/>
                 <p>
                     TODO App
                 </p>
@@ -30,17 +38,16 @@ function App() {
                 <ToDoControls/>
                 <Switch>
                     <Route path={"/settings/:id"}>
-                        <TODOElement/>
+                        <ToDoList/>
                         <EditToDo/>
                     </Route>
                     <Route exact path={"/"}>
-                        <TODOElement/>
+                        <ToDoList/>
                     </Route>
                 </Switch>
+                <SnackbarError/>
             </div>
         </div>
-
     );
 }
 
-export default App;

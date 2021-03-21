@@ -1,11 +1,12 @@
 import React from 'react';
 import {render, screen} from '@testing-library/react';
-import App from '../components/main/App';
+import {App} from '../components/main/App';
 import {Provider} from "react-redux";
 import store from "../store";
 import {BrowserRouter} from "react-router-dom";
-import { enableFetchMocks } from 'jest-fetch-mock'
+import {enableFetchMocks} from 'jest-fetch-mock'
 import fetchMock from "jest-fetch-mock"
+
 enableFetchMocks();
 
 describe("App component", () => {
@@ -35,17 +36,17 @@ describe("App component", () => {
     })
 
     test("should render TODO App in header", () => {
-        render(<BrowserRouter><Provider store={store}><App /></Provider></BrowserRouter>);
+        render(<BrowserRouter><Provider store={store}><App/></Provider></BrowserRouter>);
         screen.getByText(/TODO App/i);
     });
 
     test("should render TODO name", () => {
-        render(<BrowserRouter><Provider store={store}><App /></Provider></BrowserRouter>);
+        render(<BrowserRouter><Provider store={store}><App/></Provider></BrowserRouter>);
         screen.getByText(/Sharable even-keeled middleware/i);
     });
 
     test("should render TODO percent", () => {
-        render(<BrowserRouter><Provider store={store}><App /></Provider></BrowserRouter>);
+        render(<BrowserRouter><Provider store={store}><App/></Provider></BrowserRouter>);
         screen.getByText(/68/i);
     });
 });

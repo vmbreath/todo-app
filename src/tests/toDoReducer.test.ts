@@ -1,5 +1,5 @@
 import {actions, reducer} from "../reducers/toDoReducer";
-import enumFilterState from "../models/enumFilterState";
+import EnumFilterState from "../models/EnumFilterState";
 
 const initialState = {
     listTodos: [
@@ -20,7 +20,7 @@ const initialState = {
             "description": "Try to compress the SMTP hard drive, maybe it will hack the open-source microchip!"
         }
     ],
-    filterState: enumFilterState.all
+    filterState: EnumFilterState.all
 };
 describe("toDoReducer test", () => {
     it("it should replace all toDos", () => {
@@ -72,10 +72,10 @@ describe("toDoReducer test", () => {
         expect(reducer({...initialState}, actions.addToDo(toDoToAdd)).listTodos[2]).toEqual(toDoToAdd);
     });
     it("it should switch filter", () => {
-        expect(reducer({...initialState}, actions.filterToDos()).filterState).toEqual(enumFilterState.completed);
-        initialState.filterState = enumFilterState.completed;
-        expect(reducer({...initialState}, actions.filterToDos()).filterState).toEqual(enumFilterState.notCompleted);
-        initialState.filterState = enumFilterState.notCompleted;
-        expect(reducer({...initialState}, actions.filterToDos()).filterState).toEqual(enumFilterState.all);
+        expect(reducer({...initialState}, actions.filterToDos()).filterState).toEqual(EnumFilterState.completed);
+        initialState.filterState = EnumFilterState.completed;
+        expect(reducer({...initialState}, actions.filterToDos()).filterState).toEqual(EnumFilterState.notCompleted);
+        initialState.filterState = EnumFilterState.notCompleted;
+        expect(reducer({...initialState}, actions.filterToDos()).filterState).toEqual(EnumFilterState.all);
     });
 });

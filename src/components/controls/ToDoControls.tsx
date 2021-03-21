@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {useHistory} from "react-router-dom";
 import AddIcon from '@material-ui/icons/AddCircle';
 import IconButton from "@material-ui/core/IconButton";
@@ -7,24 +7,24 @@ import {Tooltip} from "@material-ui/core";
 import {filterToDos, selectFilterState} from "../../reducers/toDoReducer";
 import {useDispatch, useSelector} from "react-redux";
 import Button from "@material-ui/core/Button";
-import enumFilterState from "../../models/enumFilterState";
+import EnumFilterState from "../../models/EnumFilterState";
 
 // Компонент для создания кнопки довалнея новой TODO и фильтра
-export default function ToDoControls() {
+export const ToDoControls: FC = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const [filterButtonText, setFilterButtonText] = useState('Show done');
-    const filterState: enumFilterState = useSelector(selectFilterState);
+    const filterState: EnumFilterState = useSelector(selectFilterState);
 
     useEffect(() => {
         switch (filterState) {
-            case enumFilterState.all:
+            case EnumFilterState.all:
                 setFilterButtonText('Show done');
                 break;
-            case enumFilterState.completed:
+            case EnumFilterState.completed:
                 setFilterButtonText('Show undone');
                 break;
-            case enumFilterState.notCompleted:
+            case EnumFilterState.notCompleted:
                 setFilterButtonText('Show all');
                 break;
         }
@@ -36,7 +36,8 @@ export default function ToDoControls() {
                 <AddIcon fontSize="large"/>
             </IconButton>
             <Tooltip title="Filter by completed/not completed tasks" aria-label="filter">
-                <Button id={"filter-button"} variant="contained" color="primary" aria-label="filter" onClick={() => dispatch(filterToDos())}>
+                <Button id={"filter-button"} variant="contained" color="primary" aria-label="filter"
+                        onClick={() => dispatch(filterToDos())}>
                     {filterButtonText}
                     <FilterListIcon fontSize="large"/>
                 </Button>
